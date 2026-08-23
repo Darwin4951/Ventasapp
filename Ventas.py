@@ -10,7 +10,7 @@ st.title("📊 Control y Proyección de Ventas")
 st.markdown("---")
 
 # Sección de entradas organizadas en dos columnas para mejor estética
-st.subheader("1. Parámetros y Datos del Día")
+st.subheader("Parámetros y Datos del Día")
 col1, col2 = st.columns(2)
 
 with col1:
