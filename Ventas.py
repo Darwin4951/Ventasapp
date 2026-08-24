@@ -1,6 +1,6 @@
 import streamlit as st
 import numpy as np
-from datetime import date
+from datetime import datetime
 
 # Configuración de la página (debe ser lo primero de Streamlit)
 st.set_page_config(page_title="Reporte Diario de Ventas", page_icon="📊", layout="centered")
@@ -24,11 +24,11 @@ with col2:
     st.write("")
 
 # Botón principal estilizado
-calcular = st.button("🚀 Calcular Resultados", type="primary", use_container_width=True)
+calcular = st.button("Calcular Resultados", type="primary", use_container_width=True)
 
 if calcular:
-    # Cálculos automáticos
-    hoy = date.today()
+    # Cálculos automáticos usando la fecha local segura
+    hoy = datetime.now().date()
     inicio_mes = f"{hoy.year}-{hoy.month:02d}-01"
     
     if hoy.month == 12:
