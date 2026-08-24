@@ -1,7 +1,7 @@
 import streamlit as st
 import numpy as np
 from datetime import datetime, timedelta
-import pytz  # Para asegurar la zona horaria correcta
+from zoneinfo import ZoneInfo  # Librería nativa, no requiere instalación en la nube
 
 # Configuración de la página (debe ser lo primero de Streamlit)
 st.set_page_config(page_title="Reporte Diario de Ventas", page_icon="📊", layout="centered")
@@ -26,8 +26,8 @@ with col2:
 calcular = st.button("Calcular Resultados", type="primary", use_container_width=True)
 
 if calcular:
-    # 1. Fijar la zona horaria correcta (Honduras / Centroamérica) para que no varíe en el celular
-    zona_horaria = pytz.timezone('America/Tegucigalpa')
+    # 1. Fijar la zona horaria correcta usando ZoneInfo (nativo de Python)
+    zona_horaria = ZoneInfo('America/Tegucigalpa')
     hoy = datetime.now(zona_horaria).date()
     
     # 2. Definir inicio y fin de mes como objetos de fecha (Date)
@@ -41,9 +41,7 @@ if calcular:
     # 3. Total de días laborales del mes (Lunes a Sábado -> '1111110')
     total_dias_mes = np.busday_count(inicio_mes, fin_mes, weekmask='1111110')
     
-    # 4. Días laborales transcurridos
-    # Como np.busday_count excluye el último día, le sumamos 1 día a "hoy" (hasta mañana)
-    # Numpy automáticamente sabrá si hoy es domingo y no lo contará.
+    # 4. Días laborales transcurridos (sumando 1 día para incluir "hoy" correctamente)
     manana = hoy + timedelta(days=1)
     dias_transcurridos = np.busday_count(inicio_mes, manana, weekmask='1111110')
 
