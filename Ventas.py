@@ -1,6 +1,7 @@
 import streamlit as st
 import numpy as np
-from datetime import datetime
+from datetime import datetime, timedelta
+import pytz  # Para asegurar la zona horaria correcta
 
 # Configuración de la página (debe ser lo primero de Streamlit)
 st.set_page_config(page_title="Reporte Diario de Ventas", page_icon="📊", layout="centered")
@@ -16,10 +17,8 @@ col1, col2 = st.columns(2)
 with col1:
     meta = st.number_input("Meta del mes", value=1050000.0, format="%.2f", step=10000.0)
     ventahoy = st.number_input("Venta total de hoy", value=0.0, format="%.2f", step=1000.0)
-
 with col2:
     ventames = st.number_input("Acumulado previo del mes", value=0.0, format="%.2f", step=1000.0)
-    # Espacio visual alineado
     st.write("") 
     st.write("")
 
@@ -27,23 +26,32 @@ with col2:
 calcular = st.button("Calcular Resultados", type="primary", use_container_width=True)
 
 if calcular:
-    # Cálculos automáticos usando la fecha local segura
-    hoy = datetime.now().date()
-    inicio_mes = f"{hoy.year}-{hoy.month:02d}-01"
+    # 1. Fijar la zona horaria correcta (Honduras / Centroamérica) para que no varíe en el celular
+    zona_horaria = pytz.timezone('America/Tegucigalpa')
+    hoy = datetime.now(zona_horaria).date()
+    
+    # 2. Definir inicio y fin de mes como objetos de fecha (Date)
+    inicio_mes = datetime(hoy.year, hoy.month, 1).date()
     
     if hoy.month == 12:
-        fin_mes = f"{hoy.year + 1}-01-01"
+        fin_mes = datetime(hoy.year + 1, 1, 1).date()
     else:
-        fin_mes = f"{hoy.year}-{hoy.month + 1:02d}-01"
+        fin_mes = datetime(hoy.year, hoy.month + 1, 1).date()
 
+    # 3. Total de días laborales del mes (Lunes a Sábado -> '1111110')
     total_dias_mes = np.busday_count(inicio_mes, fin_mes, weekmask='1111110')
-    dias_transcurridos = np.busday_count(inicio_mes, hoy.strftime('%Y-%m-%d'), weekmask='1111110')
-    if hoy.weekday() != 6:
-        dias_transcurridos += 1
-
-    dias_restantes = max(0, total_dias_mes - dias_transcurridos)
-    acumulado = ventahoy + ventames
     
+    # 4. Días laborales transcurridos
+    # Como np.busday_count excluye el último día, le sumamos 1 día a "hoy" (hasta mañana)
+    # Numpy automáticamente sabrá si hoy es domingo y no lo contará.
+    manana = hoy + timedelta(days=1)
+    dias_transcurridos = np.busday_count(inicio_mes, manana, weekmask='1111110')
+
+    # Días restantes
+    dias_restantes = max(0, total_dias_mes - dias_transcurridos)
+    
+    # Cálculos financieros
+    acumulado = ventahoy + ventames
     nesecidad = (meta - acumulado) / dias_restantes if dias_restantes > 0 else 0
     avance = (acumulado / meta) * 100 if meta > 0 else 0.0
     
