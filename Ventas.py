@@ -12,7 +12,7 @@ st.title("📊 Control y Proyección de Ventas por Ruta")
 st.markdown("---")
 
 # --- DICCIONARIO MANUAL DE METAS POR RUTA ---
-# Aquí puedes escribir manualmente la meta exacta para cada ruta
+# escribir manualmente la meta exacta para cada ruta
 METAS_POR_RUTA = {
     "ruta 7201": 980000.0,
     "ruta 7202": 1000000.0,
