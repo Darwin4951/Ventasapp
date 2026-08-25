@@ -8,7 +8,7 @@ st.set_page_config(page_title="Gestión de Rutas y Liquidación", page_icon="�
 st.title("📊 Sistema de Gestión - Distribución de Rutas")
 st.markdown("---")
 
-pestana_ventas, pestana_liquidacion = st.tabs(["📈 Control y Proyección de Ventas", "💰 Liquidación Diaria"])
+pestana_ventas, pestana_liquidacion = st.tabs(["Control y Proyección de Ventas", "Liquidación Diaria"])
 
 # ==========================================
 # PESTAÑA 1: CONTROL Y PROYECCIÓN DE VENTAS
@@ -36,7 +36,7 @@ with pestana_ventas:
     ruta_seleccionada = st.selectbox("Elige la ruta a gestionar:", list(METAS_POR_RUTA.keys()), key="select_ruta_ventas")
     meta_asignada = METAS_POR_RUTA[ruta_seleccionada]
     
-    st.info(f"📌 Estás trabajando en la **{ruta_seleccionada.upper()}** | Meta mensual fija: **L. {meta_asignada:,.2f}**")
+    st.info(f"Estás trabajando en la **{ruta_seleccionada.upper()}** | Meta mensual fija: **L. {meta_asignada:,.2f}**")
     st.markdown("---")
 
     st.subheader(f"Parámetros y Datos del Día - {ruta_seleccionada.upper()}")
@@ -70,7 +70,7 @@ with pestana_ventas:
         proyeccion_final = (proyeccion_dinero / meta) * 100 if meta > 0 else 0.0
 
         st.markdown("---")
-        st.subheader(f"📈 Resultados y Proyecciones - {ruta_seleccionada.upper()}")
+        st.subheader(f"Resultados y Proyecciones - {ruta_seleccionada.upper()}")
 
         m1, m2 = st.columns(2)
         with m1:
@@ -91,7 +91,7 @@ with pestana_ventas:
 # PESTAÑA 2: LIQUIDACIÓN DIARIA
 # ==========================================
 with pestana_liquidacion:
-    st.subheader("💰 Apartado de Liquidación Diaria")
+    st.subheader("Apartado de Liquidación Diaria")
     st.write("Ingrese los datos correspondientes para calcular el balance de saldos:")
 
     col_l1, col_l2 = st.columns(2)
@@ -111,7 +111,7 @@ with pestana_liquidacion:
         multiplicar = saldo_total * 0.94
 
         st.markdown("---")
-        st.subheader("📋 Resumen de Liquidación")
+        st.subheader("Resumen de Liquidación")
 
         l1, l2 = st.columns(2)
         with l1:
